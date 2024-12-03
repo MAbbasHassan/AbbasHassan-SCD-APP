@@ -36,7 +36,7 @@
             width: 100%;
         }
 </style>
-</head>
+
 <body>
 <div class="bg-blur">
 <div class="container mt-5">

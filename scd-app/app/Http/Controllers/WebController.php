@@ -65,4 +65,9 @@ class WebController extends Controller
     {
         return view('pages.health');
     }
+
+    public function admin()
+    {
+        return view('pages.admin');
+    }
 }

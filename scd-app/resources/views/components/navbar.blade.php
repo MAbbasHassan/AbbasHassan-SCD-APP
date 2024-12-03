@@ -46,6 +46,9 @@
                   <li class="nav-item">
                     <a href="./contact" class="nav-link">Contact Us</a>
                   </li>
+                  <li class="nav-item">
+                    <a href="{{ url('categoriess') }}" class="nav-link">LogIn/SignUp</a>
+                  </li>
                 </ul>
                 <form class="d-flex" role="search">
                   <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

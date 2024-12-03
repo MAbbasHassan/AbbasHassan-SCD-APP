@@ -2,6 +2,16 @@
 use App\Http\Controllers\WebController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
+
+
+Route::get('categoriess', [App\Http\Controllers\CategoryController::class, 'index']);
+Route::get('categoriess/create', [App\Http\Controllers\CategoryController::class, 'create']);
+Route::post('categoriess/create', [App\Http\Controllers\CategoryController::class, 'store']);
+Route::get('categoriess/{id}/edit', [App\Http\Controllers\CategoryController::class, 'edit']);
+Route::put('categoriess/{id}/edit', [App\Http\Controllers\CategoryController::class, 'update']);
+Route::get('categoriess/{id}/delete', [App\Http\Controllers\CategoryController::class, 'destroy']);
+
 Route::controller(WebController::class)->group(function () {
     Route::get('', 'home');
     Route::get('/product', 'shop');
@@ -15,6 +25,7 @@ Route::controller(WebController::class)->group(function () {
     Route::get('/baby', 'baby');
     Route::get('/hygiene', 'hygiene');
     Route::get('/health', 'health');
+    Route::get('/admin', 'admin');
 });
 
 Route::get('/welcome', function () {

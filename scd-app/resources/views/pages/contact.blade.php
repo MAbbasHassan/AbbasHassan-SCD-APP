@@ -154,7 +154,7 @@
         <h2 class="text-center">Team</h2>
         <div class="row">
             <div class="col-md-4 col-sm-12 mt-2" data-aos="fade-left" data-aos-delay="50" data-aos-duration="1000">
-                <img src="{{asset("images/usericon.png")}}" class="img-fluid" style="width: 40%;">
+                <img src="{{asset("images/pfp.png")}}" class="img-fluid" style="width: 40%;">
             </div>
             <div class="col-md-8 col-sm-12 mt-2" data-aos="fade-right" data-aos-delay="50" data-aos-duration="1000" style="border-left: 1px solid black;">
                 <h3>Muhammad Abbas Hassan</h3>
