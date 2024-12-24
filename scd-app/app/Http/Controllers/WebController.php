@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers; //ik namka function use kry dubara tu isi lye
 
+use App\Models\Product;
 use Illuminate\Http\Request; //multiple inheritance
 
 class WebController extends Controller
@@ -69,5 +70,21 @@ class WebController extends Controller
     public function admin()
     {
         return view('pages.admin');
+    }
+    public function shop()
+    {
+        return view('pages.shop');
+    }
+    public function pro(Request $request)
+    {
+            $products = Product::all();
+
+        return view('pages.pro', compact('products'));
+    }
+
+    public function search_pro(Request $request){
+        $search = $request['search'] ?? "";
+        $products = Product::where("name","LIKE","%$search%")->get();
+        return view('pages.search_pro', compact('products'));
     }
 }

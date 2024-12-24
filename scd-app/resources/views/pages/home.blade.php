@@ -100,7 +100,8 @@
         <div class="hero">
             <h1><strong>True Organic Hub!</strong></h1>
             <p><strong>Your Destination For Pure And Natural Products!!</strong></p>
-            <a class="btn btn-shop btn-lg" href="./grocery" role="button">Shop Now</a>
+            <a class="btn btn-shop btn-lg" href="{{ route('user.products') }}" role="button">Shop Now</a>
+
         </div>
 
         <div class="about-section">
