@@ -188,15 +188,7 @@
 
             <!-- Search Form -->
             <div class="search-container">
-                <form action="{{ route('products.read') }}" method="GET" class="d-flex">
-                    <input type="search" name="search" class="form-control" placeholder="Search..." value="{{ $search ?? '' }}">
-                    <button class="btn btn-primary">Search</button>
-                </form>
-
-                <!-- View All Products Button -->
-                @if(isset($search) && $search !== '')
-                    <a href="{{ route('products.read') }}" class="btn btn-secondary">View All Products</a>
-                @endif
+                <input type="text" id="searchBar" class="form-control" placeholder="Search...">
             </div>
 
             <div class="array-container">
@@ -214,7 +206,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="productTable">
                         @foreach ($products as $item)
                         <tr>
                             <td>{{ $item->id }}</td>
@@ -237,5 +229,51 @@
                 </table>
             </div>
         </div>
+
+        <script>
+            // Attach event listener to search bar
+            document.getElementById('searchBar').addEventListener('keyup', function () {
+                const query = this.value;
+
+                // Use Fetch API to send Ajax request to the search route
+                fetch(`{{ route('products.search') }}?search=${query}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest' // Ensure it is an Ajax request
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    const tableBody = document.getElementById('productTable');
+                    tableBody.innerHTML = ''; // Clear the table
+
+                    // Append rows dynamically
+                    data.forEach(item => {
+                        const row = `
+                            <tr>
+                                <td>${item.id}</td>
+                                <td>${item.name}</td>
+                                <td>${item.description}</td>
+                                <td>${item.price}</td>
+                                <td>${item.category_id}</td>
+                                <td>
+                                    <img src="/storage/${item.picture}" alt="Product Image" class="image-thumbnail">
+                                </td>
+                                <td>${item.created_at}</td>
+                                <td>${item.updated_at}</td>
+                                <td>
+                                    <a href="/products/${item.id}/edit" class="btn btn-success mx-1 btn-action">Update</a>
+                                    <a href="/products/${item.id}/delete" class="btn btn-danger mx-1 btn-action" onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
+                                </td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error('Error:', error)); // Log errors for debugging
+            });
+        </script>
     </body>
 </x-master-layout>

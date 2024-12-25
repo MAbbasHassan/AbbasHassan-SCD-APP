@@ -18,6 +18,8 @@ Route::prefix('products')->group(function () {
     Route::get('/view', [ProductController::class, 'view'])->name('products.view'); // View products
     Route::get('/search', [ProductController::class, 'search'])->name('products.search'); // Search functionality
     Route::get('/{id}', [ProductController::class, 'show'])->name('product.details'); // View details of a single product
+    Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
+
 });
 
 // User Products Search Route

@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    // View with Search Functionality
+    // Display a single product by ID
     public function show($id)
-{
-    $product = Product::findOrFail($id); // Fetch the product by ID
-    return view('products.show', compact('product')); // Return the product details view
-}
+    {
+        $product = Product::findOrFail($id); // Fetch the product by ID
+        return view('products.show', compact('product')); // Return the product details view
+    }
 
+    // View products with search functionality
     public function view(Request $request)
     {
         $search = $request->input('search'); // Get the search term
@@ -28,38 +29,37 @@ class ProductController extends Controller
             })
             ->get();
 
-        // Return the filtered products to the same view
         return view('product.read', compact('products', 'search'));
     }
 
-    // Display All Products
+    // Display all products
     public function index()
     {
         $products = Product::all();
         return view('product.index', compact('products'));
     }
 
-    // Show the Form to Create a Product
+     // Show Products with Search Capability
+     public function read(Request $request)
+     {
+         $search = $request->input('search');
+         $products = $search
+             ? Product::where('name', 'like', "%$search%")
+                 ->orWhere('description', 'like', "%$search%")
+                 ->get()
+             : Product::all();
+ 
+         return view('product.read', compact('products', 'search'));
+     } 
+
+    // Show the form to create a product
     public function create()
     {
         $categories = Category::all(); // Fetch categories for the dropdown
         return view('product.create', compact('categories'));
     }
 
-    // Show Products with Search Capability
-    public function read(Request $request)
-    {
-        $search = $request->input('search');
-        $products = $search
-            ? Product::where('name', 'like', "%$search%")
-                ->orWhere('description', 'like', "%$search%")
-                ->get()
-            : Product::all();
-
-        return view('product.read', compact('products', 'search'));
-    }
-
-    // Store a New Product
+    // Store a new product
     public function store(Request $request)
     {
         $request->validate([
@@ -85,7 +85,7 @@ class ProductController extends Controller
         return redirect()->back()->with('status', 'Product created successfully!');
     }
 
-    // Show the Form to Edit a Product
+    // Show the form to edit a product
     public function edit(int $id)
     {
         $product = Product::findOrFail($id);
@@ -93,49 +93,43 @@ class ProductController extends Controller
         return view('product.edit', compact('product', 'categories'));
     }
 
-    // Update an Existing Product
-   // Update an Existing Product
-public function update(Request $request, $id)
-{
-    $product = Product::findOrFail($id);
+    // Update an existing product
+    public function update(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
 
-    // Validate the incoming request
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'price' => 'required|numeric',
-        'description' => 'required|string',
-        'category_id' => 'required|exists:categories,id', // Validate category exists
-        'file' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // Validate the image file
-    ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'description' => 'required|string',
+            'category_id' => 'required|exists:categories,id', // Validate category exists
+            'file' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // Validate the image file
+        ]);
 
-    // Handle the file upload if there is a file
-    if ($request->hasFile('file')) {
-        if ($product->picture) {
-            Storage::delete('public/' . $product->picture); // Delete old image
+        if ($request->hasFile('file')) {
+            if ($product->picture) {
+                Storage::delete('public/' . $product->picture); // Delete old image
+            }
+            $product->picture = $request->file('file')->store('uploads', 'public');
         }
-        // Store the new file and assign its path to the product
-        $product->picture = $request->file('file')->store('uploads', 'public');
+
+        $product->update([
+            'name' => $request->name,
+            'price' => $request->price,
+            'description' => $request->description,
+            'category_id' => $request->category_id,
+        ]);
+
+        return redirect()->back()->with('status', 'Product updated successfully!');
     }
 
-    // Update other product fields
-    $product->update([
-        'name' => $request->name,
-        'price' => $request->price,
-        'description' => $request->description,
-        'category_id' => $request->category_id,
-    ]);
-
-    return redirect()->back()->with('status', 'Product updated successfully!');
-}
-
-    // Delete a Product
+    // Delete a product
     public function destroy(int $id)
     {
         $product = Product::findOrFail($id);
 
-        // Delete the associated image if it exists
         if ($product->picture) {
-            Storage::delete('public/' . $product->picture);
+            Storage::delete('public/' . $product->picture); // Delete associated image
         }
 
         $product->delete();
@@ -143,20 +137,40 @@ public function update(Request $request, $id)
         return redirect()->back()->with('status', 'Product deleted successfully');
     }
 
-    // User Product Search Functionality
-public function userSearch(Request $request)
-{
-    $search = $request->input('search'); // Get the search term
+    // User product search functionality
+    public function userSearch(Request $request)
+    {
+        $search = $request->input('search'); // Get the search term
 
-    // Query products by name or description
+        $products = Product::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+                  //  ->orWhere('description', 'like', '%' . $search . '%');
+            })
+            ->get();
+
+        return view('user.products', compact('products', 'search'));
+    }
+
+    // General product search functionality (Ajax and non-Ajax)
+    public function search(Request $request)
+{
+    $search = $request->query('search', ''); // Get the search query
+
+    // Filter products based on the search term
     $products = Product::query()
         ->when($search, function ($query) use ($search) {
-            $query->where('name', 'like', '%' . $search . '%')
-                ->orWhere('description', 'like', '%' . $search . '%');
+            $query->where('name', 'like', '%' . $search . '%');
+             //   ->orWhere('description', 'like', '%' . $search . '%');
         })
         ->get();
 
-    // Return the same view with filtered products
+    // Return JSON response for Ajax requests
+    if ($request->ajax()) {
+        return response()->json($products);
+    }
+
+    // Otherwise, return the view for normal requests
     return view('user.products', compact('products', 'search'));
 }
 

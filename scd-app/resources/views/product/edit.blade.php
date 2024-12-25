@@ -163,7 +163,7 @@
                         @if ($product->picture)
                             <div class="mt-2">
                                 <p>Current Image:</p>
-                                <img src="{{ asset('storage/uploads/'.$product->picture) }}" alt="Product Image" class="image-thumbnail">
+                                <img src="{{ asset('storage/'.$product->picture) }}" alt="Product Image" class="image-thumbnail">
                             </div>
                         @endif
                         @error('file') <div class="error">{{ $message }}</div> @enderror
