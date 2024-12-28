@@ -6,9 +6,18 @@ use App\Models\Product;
 use App\Models\Category; // Import the Category model
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Services\ProductService;
 
 class ProductController extends Controller
 {
+
+    private $productService;
+
+public function __construct(ProductService $productService)
+{
+    $this->productService = $productService;
+}
+
     // Display a single product by ID
     public function show($id)
     {

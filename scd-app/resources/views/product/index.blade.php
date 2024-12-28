@@ -56,8 +56,8 @@
                 <!-- Admin Options -->
                 <a href="{{ url('products/create') }}" class="btn btn-admin">Create Product</a><br><br><br>
                 <a href="{{ url('products/read') }}" class="btn btn-admin">Read Product</a><br><br><br>
-                <a href="{{ url('categoriess/update') }}" class="btn btn-admin">Update Product</a><br><br><br>
-                <a href="{{ url('categoriess/delete') }}" class="btn btn-admin">Delete Product</a><br><br><br>
+                <a href="{{ url('products/update') }}" class="btn btn-admin">Update Product</a><br><br><br>
+                <a href="{{ url('products/delete') }}" class="btn btn-admin">Delete Product</a><br><br><br>
 
                 <!-- Go Back Button -->
                 <a href="{{ route('home') }}" class="btn btn-back mt-4">Go Back to Home</a>
