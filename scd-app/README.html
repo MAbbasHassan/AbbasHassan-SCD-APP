@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>True Organic Hub - Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            font-size: 2.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+        h3 {
+            font-size: 1.5em;
+            margin-top: 15px;
+        }
+        p {
+            color: #34495e;
+        }
+        code {
+            background-color: #ecf0f1;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        pre {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        li {
+            margin: 5px 0;
+        }
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>True Organic Hub</h1>
+
+    <div class="section">
+        <h2>Project Overview</h2>
+        <p>
+            <strong>True Organic Hub</strong> is an advanced e-commerce platform designed to promote and sell organic products. This project includes a robust backend implementation using Laravel, integrating RESTful APIs secured with Laravel Passport for authentication. The platform supports features like product management, category association, and dynamic search functionality, ensuring scalability and maintainability with service-layer architecture.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Features</h2>
+        <ul>
+            <li><b>Product Management</b>: Create, read, update, and delete products with categories and image uploads.</li>
+            <li><b>API Integration</b>: RESTful APIs for external integrations and API testing.</li>
+            <li><b>Secure Authentication</b>: Token-based authentication using Laravel Passport.</li>
+            <li><b>Dynamic Search</b>: Search products by name or description.</li>
+            <li><b>Clean Architecture</b>: Service-layer architecture for reusable and maintainable code.</li>
+            <li><b>API Testing</b>: Endpoints tested with tools like Postman for reliability.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Setup Instructions</h2>
+        <h3>Prerequisites</h3>
+        <ul>
+            <li><b>PHP</b> (>= 8.0)</li>
+            <li><b>Composer</b></li>
+            <li><b>Node.js</b> and <b>npm</b></li>
+            <li><b>MySQL</b> or any supported database</li>
+            <li><b>Laravel</b> (latest version installed via Composer)</li>
+        </ul>
+
+        <h3>1. Clone the Repository</h3>
+        <pre><code>git clone https://github.com/your-repository/true-organic-hub.git
+cd true-organic-hub
+</code></pre>
+
+        <h3>2. Install Dependencies</h3>
+        <pre><code>composer install
+npm install
+</code></pre>
+
+        <h3>3. Setup Environment Variables</h3>
+        <ol>
+            <li>Copy <code>.env.example</code> to <code>.env</code>:
+                <pre><code>cp .env.example .env</code></pre>
+            </li>
+            <li>Update the <code>.env</code> file with your database credentials:
+                <pre><code>DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_user
+DB_PASSWORD=your_database_password
+</code></pre>
+            </li>
+        </ol>
+
+        <h3>4. Generate Application Key</h3>
+        <pre><code>php artisan key:generate</code></pre>
+
+        <h3>5. Migrate and Seed the Database</h3>
+        <pre><code>php artisan migrate
+php artisan db:seed
+</code></pre>
+
+        <h3>6. Install Passport</h3>
+        <pre><code>php artisan passport:install</code></pre>
+        <p>Add the <code>Laravel\Passport\HasApiTokens</code> trait to your <code>User</code> model to enable API authentication.</p>
+
+        <h3>7. Serve the Application</h3>
+        <pre><code>php artisan serve</code></pre>
+        <p>Visit <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> in your browser.</p>
+    </div>
+
+    <div class="section">
+        <h2>API Endpoints</h2>
+        <h3>Authentication</h3>
+        <ul>
+            <li><b>Login</b>: <code>/api/login</code></li>
+            <li><b>Register</b>: <code>/api/register</code></li>
+        </ul>
+        <h3>Product Management</h3>
+        <ul>
+            <li><b>Get All Products</b>: <code>GET /api/products</code></li>
+            <li><b>Get Product by ID</b>: <code>GET /api/products/{id}</code></li>
+            <li><b>Create Product</b>: <code>POST /api/products</code> <span class="highlight">(Protected)</span></li>
+            <li><b>Update Product</b>: <code>PUT /api/products/{id}</code> <span class="highlight">(Protected)</span></li>
+            <li><b>Delete Product</b>: <code>DELETE /api/products/{id}</code> <span class="highlight">(Protected)</span></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Testing</h2>
+        <h3>1. Postman</h3>
+        <p>Import the provided Postman collection (if available) and test all API endpoints.</p>
+        <h3>2. Automated Testing</h3>
+        <pre><code>php artisan test</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>Folder Structure</h2>
+        <pre><code>app/
+├── Http/
+│   ├── Controllers/   # All controllers, including API and web
+│   ├── Middleware/
+├── Models/            # Models for Product and Category
+├── Services/          # Service classes for business logic
+database/
+├── migrations/        # Database migrations
+├── seeders/           # Data seeders
+routes/
+├── api.php            # API routes
+├── web.php            # Web routes
+resources/
+├── views/             # Blade templates
+public/
+├── uploads/           # Uploaded product images
+</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>Contributing</h2>
+        <ol>
+            <li>Fork the repository.</li>
+            <li>Create a new branch: <code>git checkout -b feature-name</code>.</li>
+            <li>Commit your changes: <code>git commit -m "Add new feature"</code>.</li>
+            <li>Push the branch: <code>git push origin feature-name</code>.</li>
+            <li>Create a pull request.</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>License</h2>
+        <p>This project is licensed under the <a href="LICENSE">MIT License</a>.</p>
+    </div>
+
+</body>
+</html>
