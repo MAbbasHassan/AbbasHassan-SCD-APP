@@ -47,7 +47,7 @@ class ProductController extends Controller
              ? Product::where('name', 'like', "%$search%")
                  ->orWhere('description', 'like', "%$search%")
                  ->get()
-             : Product::all();
+             : Product::all(); //data fetch
  
          return view('product.read', compact('products', 'search'));
      } 

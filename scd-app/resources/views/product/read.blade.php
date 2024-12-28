@@ -213,7 +213,7 @@
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->description }}</td>
                             <td>{{ $item->price }}</td>
-                            <td>{{ $item->category_id }}</td>
+                            <td>{{ $item->category->name }}</td>
                             <td>
                                 <img src="{{ asset('storage/'.$item->picture) }}" alt="Product Image" class="image-thumbnail">
                             </td>
