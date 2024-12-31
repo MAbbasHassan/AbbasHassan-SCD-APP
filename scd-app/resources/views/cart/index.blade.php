@@ -123,76 +123,76 @@
         }
     </style>
 
-    <body>
-        <div class="bg-blur">
-            <div class="container mt-5">
-                <h1 class="text-center mb-4">Your Cart</h1>
+<body>
+    <div class="bg-blur">
+        <div class="container mt-5">
+            <h1 class="text-center mb-4">Your Cart</h1>
 
-                <!-- Back to Products Button -->
-                <div class="actions">
-                    <a href="{{ route('user.products') }}" class="btn btn-warning">Back to All Products</a>
-                </div>
-
-                <!-- Cart Items Table -->
-                @if(session()->has('cart') && count(session('cart')) > 0)
-                    <table class="cart-table">
-                        <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Product Name</th>
-                                <th>Description</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Subtotal</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach(session('cart') as $productId => $details)
-                                <tr>
-                                    <td><img src="{{ asset('storage/' . $details['image']) }}" alt="{{ $details['name'] }}"></td>
-                                    <td>{{ $details['name'] }}</td>
-                                    <td>{{ $details['description'] }}</td>
-                                    <td>${{ $details['price'] }}</td>
-                                    <td>
-                                        <div class="quantity-buttons">
-                                            <form action="{{ route('cart.update', $productId) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" name="action" value="decrease" class="btn btn-secondary">-</button>
-                                            </form>
-                                            <span>{{ $details['quantity'] }}</span>
-                                            <form action="{{ route('cart.update', $productId) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" name="action" value="increase" class="btn btn-secondary">+</button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                    <td>${{ $details['subtotal'] }}</td>
-                                    <td>
-                                        <form action="{{ route('cart.remove', $productId) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Remove</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                    <div class="total">
-                        Total: ${{ array_sum(array_column(session('cart'), 'subtotal')) }}
-                    </div>
-                    <form action="{{ route('cart.checkout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-success">Proceed to Checkout</button>
-                    </form>
-                @else
-                    <p>Your cart is empty!</p>
-                @endif
+            <!-- Back to Products Button -->
+            <div class="actions">
+                <a href="{{ route('user.products') }}" class="btn btn-warning">Add More Products</a>
             </div>
+
+            <!-- Cart Items Table -->
+            @if(session()->has('cart') && count(session('cart')) > 0)
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Product Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(session('cart') as $productId => $details)
+                            <tr>
+                                <td><img src="{{ asset('storage/' . $details['image']) }}" alt="{{ $details['name'] }}"></td>
+                                <td>{{ $details['name'] }}</td>
+                                <td>{{ $details['description'] }}</td>
+                                <td>${{ $details['price'] }}</td>
+                                <td>
+                                    <div class="quantity-buttons">
+                                        <form action="{{ route('cart.update', $productId) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" name="action" value="decrease" class="btn btn-secondary">-</button>
+                                        </form>
+                                        <span>{{ $details['quantity'] }}</span>
+                                        <form action="{{ route('cart.update', $productId) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" name="action" value="increase" class="btn btn-secondary">+</button>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td>${{ $details['subtotal'] }}</td>
+                                <td>
+                                    <form action="{{ route('cart.remove', $productId) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                {{-- <div class="total">
+                    Total: ${{ array_sum(array_column(session('cart'), 'subtotal')) }}
+                </div> --}}
+                <form action="{{ route('cart.checkout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-success">Proceed to Checkout</button>
+                </form>
+            @else
+                <p>Your cart is empty!</p>
+            @endif
         </div>
-    </body>
+    </div>
+</body>
 </x-master-layout>

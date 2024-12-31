@@ -32,7 +32,9 @@ Route::prefix('cart')->group(function () {
     Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove'); // Remove from cart
     Route::patch('/update/{id}', [CartController::class, 'update'])->name('cart.update'); // Update quantity
     Route::post('/checkout', [CartController::class, 'checkout'])->name('cart.checkout'); // Checkout
+    Route::post('/complete-checkout', [CartController::class, 'completeCheckout'])->name('cart.completeCheckout'); // Complete checkout
 });
+
 
 
 

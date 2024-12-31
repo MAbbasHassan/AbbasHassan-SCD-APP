@@ -31,11 +31,10 @@ class CartController extends Controller
                 'price' => $product->price,
                 'image' => $product->picture,
                 'quantity' => 1,
-                'subtotal' => $product->price, // Initial subtotal
             ];
         }
 
-        // Calculate subtotal
+        // Update subtotal
         $cart[$product->id]['subtotal'] = $cart[$product->id]['quantity'] * $cart[$product->id]['price'];
 
         session()->put('cart', $cart);
@@ -57,13 +56,13 @@ class CartController extends Controller
     // Update Product Quantity
     public function update(Request $request, $id)
     {
-        $action = $request->input('action');
         $cart = session()->get('cart', []);
+        $action = $request->input('action');
 
         if (isset($cart[$id])) {
-            if ($action == 'increase') {
+            if ($action === 'increase') {
                 $cart[$id]['quantity']++;
-            } elseif ($action == 'decrease' && $cart[$id]['quantity'] > 1) {
+            } elseif ($action === 'decrease' && $cart[$id]['quantity'] > 1) {
                 $cart[$id]['quantity']--;
             }
 
@@ -73,13 +72,37 @@ class CartController extends Controller
             session()->put('cart', $cart);
         }
 
-        return redirect()->route('cart.index');
+        return redirect()->route('cart.index')->with('status', 'Cart updated successfully!');
     }
 
-    // Checkout
-    public function checkout()
-    {
-        session()->forget('cart');
-        return redirect()->route('cart.index')->with('status', 'Thank you for your purchase!');
+   // Checkout
+   public function checkout()
+{
+    $cart = session()->get('cart', []);
+
+    if (empty($cart)) {
+        return redirect()->route('cart.index')->with('status', 'Your cart is empty!');
     }
+
+    return view('cart.checkout', compact('cart'));
+}
+
+public function completeCheckout(Request $request)
+{
+    // Handle form validation
+    $request->validate([
+        'full_name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'phone' => 'required|string|max:15',
+        'address' => 'required|string|max:255',
+    ]);
+
+    // Process the order (store in database, send confirmation email, etc.)
+    // For now, we just clear the cart and return a success message
+    session()->forget('cart');
+
+    return redirect()->route('cart.index')->with('status', 'Thank you for your purchase!');
+}
+
+   
 }
