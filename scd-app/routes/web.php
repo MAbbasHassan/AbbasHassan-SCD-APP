@@ -61,8 +61,10 @@ Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
 
+
 Route::get('/products', function () {
     return view('product.index');
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Profile Management Routes

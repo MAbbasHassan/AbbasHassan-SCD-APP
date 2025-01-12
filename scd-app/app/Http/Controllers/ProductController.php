@@ -10,13 +10,12 @@ use App\Services\ProductService;
 
 class ProductController extends Controller
 {
-
     private $productService;
 
-public function __construct(ProductService $productService)
-{
-    $this->productService = $productService;
-}
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
 
     // Display a single product by ID
     public function show($id)
@@ -30,13 +29,12 @@ public function __construct(ProductService $productService)
     {
         $search = $request->input('search'); // Get the search term
 
-        // Query to filter the products
         $products = Product::query()
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%');
+                      ->orWhere('description', 'like', '%' . $search . '%');
             })
-            ->get();
+            ->paginate(5); // Apply pagination
 
         return view('product.read', compact('products', 'search'));
     }
@@ -44,22 +42,24 @@ public function __construct(ProductService $productService)
     // Display all products
     public function index()
     {
-        $products = Product::all();
+        $products = Product::paginate(5); // Apply pagination
         return view('product.index', compact('products'));
     }
 
-     // Show Products with Search Capability
-     public function read(Request $request)
-     {
-         $search = $request->input('search');
-         $products = $search
-             ? Product::where('name', 'like', "%$search%")
-                 ->orWhere('description', 'like', "%$search%")
-                 ->get()
-             : Product::all(); //data fetch
- 
-         return view('product.read', compact('products', 'search'));
-     } 
+    // Show products with search capability
+    public function read(Request $request)
+    {
+        $search = $request->input('search');
+
+        $products = Product::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', "%$search%")
+                      ->orWhere('description', 'like', "%$search%");
+            })
+            ->paginate(5); // Apply pagination
+
+        return view('product.read', compact('products', 'search'));
+    }
 
     // Show the form to create a product
     public function create()
@@ -79,10 +79,8 @@ public function __construct(ProductService $productService)
             'category_id' => 'required|exists:categories,id', // Validate category exists
         ]);
 
-        // Store the image
-        $filePath = $request->file('file')->store('uploads', 'public');
+        $filePath = $request->file('file')->store('uploads', 'public'); // Store the image
 
-        // Create the product
         Product::create([
             'name' => $request->name,
             'price' => $request->price,
@@ -149,38 +147,32 @@ public function __construct(ProductService $productService)
     // User product search functionality
     public function userSearch(Request $request)
     {
-        $search = $request->input('search'); // Get the search term
+        $search = $request->input('search');
 
         $products = Product::query()
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', '%' . $search . '%');
-                  //  ->orWhere('description', 'like', '%' . $search . '%');
             })
-            ->get();
+            ->paginate(5); // Apply pagination
 
         return view('user.products', compact('products', 'search'));
     }
 
     // General product search functionality (Ajax and non-Ajax)
     public function search(Request $request)
-{
-    $search = $request->query('search', ''); // Get the search query
+    {
+        $search = $request->query('search', '');
 
-    // Filter products based on the search term
-    $products = Product::query()
-        ->when($search, function ($query) use ($search) {
-            $query->where('name', 'like', '%' . $search . '%');
-             //   ->orWhere('description', 'like', '%' . $search . '%');
-        })
-        ->get();
+        $products = Product::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->paginate(5); // Apply pagination
 
-    // Return JSON response for Ajax requests
-    if ($request->ajax()) {
-        return response()->json($products);
+        if ($request->ajax()) {
+            return response()->json($products);
+        }
+
+        return view('user.products', compact('products', 'search'));
     }
-
-    // Otherwise, return the view for normal requests
-    return view('user.products', compact('products', 'search'));
-}
-
 }
